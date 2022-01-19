@@ -68,14 +68,14 @@ public class SettingsController {
     }
 
     @GetMapping("/settings/notifications")
-    public String notifications(@CurrentUser Account account, Model model) {
+    public String updateNotificationsForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Notifications.class));
         return "settings/notifications";
     }
 
     @PostMapping("/settings/notifications")
-    public String notifications(@CurrentUser Account account, @Valid Notifications notifications, Errors errors, Model model, RedirectAttributes attributes) {
+    public String updateNotifications(@CurrentUser Account account, @Valid Notifications notifications, Errors errors, Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "settings/notifications";
@@ -85,4 +85,24 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "알림을 수정했습니다.");
         return "redirect:/settings/notifications";
     }
+
+    @GetMapping("/settings/account")
+    public String updateAccountForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        return "settings/account";
+    }
+
+    @PostMapping("/settings/account")
+    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors, Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return "settings/account";
+        }
+
+        accountService.updateAccount(account, nicknameForm);
+        attributes.addFlashAttribute("message", "알림을 수정했습니다.");
+        return "redirect:/settings/account";
+    }
+
 }
